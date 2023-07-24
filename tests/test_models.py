@@ -17,7 +17,7 @@ class TestModels(unittest.TestCase):
         db.create_all()
 
         # Test için gerekli verileri oluşturuluyor
-        self.name = "John Doe"
+        self.name = "Zlatan Ibrahimovic"
         self.age = 30
         self.department = "HR"
 
