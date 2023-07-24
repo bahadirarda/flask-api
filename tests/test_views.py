@@ -1,40 +1,44 @@
 import unittest
-
 from app import app, db
-import json
 
 app.config['TESTING'] = True
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 
 test_client = app.test_client()
 
 class TestViews(unittest.TestCase):
     def setUp(self):
-        # Her test çalıştırılmadan önce burası çalışacak
-        pass
+        # Uygulama bağlantısı oluşturuluyor.
+        self.app_context = app.app_context()
+        self.app_context.push()
+
+        # Veritabanını oluşturuluyor.
+        db.create_all()
 
     def tearDown(self):
-        # Her test tamamlandıktan sonra burası çalışacak
-        pass
+        # Veritabanı bağlantısını kapanıyor.
+        db.session.remove()
+
+        # Veritabanını siliniyor.
+        db.drop_all()
+
+        # Uygulama bağlantısı kapanıyor.
+        self.app_context.pop()
 
     def test_add_employee(self):
-        # Test için gerekli verileri oluşturun
+        # Test için gerekli veriler oluşturuluyor.
         data = {
-            "name": "John Doe",
+            "name": "Zlatan Ibrahimovic",
             "age": 30,
             "department": "HR"
         }
 
-        # "add_employee" işlevine istek yapın
+        # "add_employee" işlevine istek yapılıyor.
         response = test_client.post('/api/employees', json=data)
 
-        # Doğru cevabı aldığınızı ve çalışanın eklendiğini doğrulayın
-        self.assertEqual(response.status_code, 201)
+        # Doğrulama işlemi
+        self.assertEqual(response.status_code, 201) # İşlem başarılı olduğu durumda geri bildirimi doğru alabilmek adına burada 200 yerine 201 kullanıyoruz
         self.assertEqual(response.json, {'status': 'success', 'message': 'Employee added successfully'})
 
 if __name__ == '__main__':
     unittest.main()
-
-
-#Çalıştırmak için python -m unittest tests.test_views
-# __init__.py dosyasını oluşturmadıysanız çalıştırmak için python -m unittest discover tests
-
