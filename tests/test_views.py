@@ -33,3 +33,8 @@ class TestViews(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+#Çalıştırmak için python -m unittest tests.test_views
+# __init__.py dosyasını oluşturmadıysanız çalıştırmak için python -m unittest discover tests
+
